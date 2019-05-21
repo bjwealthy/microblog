@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Sign In</h1>
+    <form action="" method="post" novalidate>
+<!--nonvalidate: imples dt form validatn task is left to the db and not the browser
+    it is optional. we shall use this to test server-side validation
+ -->
+        {{ form.hidden_tag() }}
+ <!--
+ generates a hidden field, used to protect against CSRF attack. the variable
+ was defined in the config file. Flask will do the rest.
+ -->
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+        </p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
