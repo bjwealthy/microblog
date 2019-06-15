@@ -2,14 +2,13 @@ from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
-#__name__ is a python predefined variable that is passed to the name of the module in which it is used
-
-app = Flask(__name__)
+app = Flask(__name__)           #app instance
 app.config.from_object(Config)
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+db = SQLAlchemy(app)            #db instance
+migrate = Migrate(app, db)      #migration engine instance
+login = LoginManager(app)
+login.login_view = 'login'
 
 from app import routes, models
-#route is imported at the bottom to avoid circular imports

@@ -5,4 +5,4 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABARE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False #so as to to signal d applic. anytime a change is about to be made in the db

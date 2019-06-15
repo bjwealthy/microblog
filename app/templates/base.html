@@ -8,9 +8,19 @@
     </head>
 
     <body>
-        <div>Microblog:
+        <div>
+            Microblog:
             <a href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}">Login</a>
+            {% else %}
+<!-- Since the user profile view fxn takes a dynamic argument, the url_for() function receives a
+ value for it as a keyword argument.
+Since this is a link that points to the logged in user profile, we can use Flask-Login's
+current_user() fxn to generate the correct URL-->
+            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
