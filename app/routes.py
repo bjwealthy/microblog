@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
@@ -93,3 +93,34 @@ def before_request():
 #loader callback fxn, which will run a database query that will put the target user in the database
 #session. So it's not necessary to add the user again in this function
         db.session.commit()
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+#if the above test returns true, i copy the data from the form into the user object and then write
+#the object to the database. LOOK BELOW RETURN FOR MORE COMMENT
+
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash('Your changes have been saves')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+    return render_template('edit_profile.html', title='Edit Profile', form=form)
+
+
+'''validate_on_submit() could returns a False :
+    A)bcos the browser sent a 'GET'(i.e form is being requested gor the first time) or
+    B)bcos the browser sent a 'POST' request with some form data is invalid:
+i)FOR CASE A: prepopulate the form with data that's stored in the db
+we respond by providing an initial version of the form template. This is the reverse
+of what we did during submission - move data stored in the user field to the form.
+Those form fields will have the current data stored for the user.
+ii)FOR CASE B: 'POST' is automatically checked for a submission with failed validation 
+ we don't want to write anything on the form fields(which ia already populated by WTForms)
+'''
